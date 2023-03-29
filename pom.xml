@@ -3,25 +3,28 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.aliyun.openservices</groupId>
+    <groupId>com.a483210</groupId>
     <artifactId>ons-client</artifactId>
-    <version>1.8.8.8.Release</version>
+    <version>1.8.8.8.Final</version>
 
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <java.version>1.8</java.version>
 
-        <slf4j.version>2.0.6</slf4j.version>
+        <slf4j.version>2.0.7</slf4j.version>
         <guava.version>31.1-jre</guava.version>
-        <jackson.version>2.14.1</jackson.version>
-        <netty.version>4.1.87.Final</netty.version>
+        <jackson.version>2.14.2</jackson.version>
+        <netty.version>4.1.90.Final</netty.version>
         <prometheus.version>0.16.0</prometheus.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-codec.version>1.15</commons-codec.version>
         <jna.version>5.13.0</jna.version>
 
         <maven-source.version>3.2.1</maven-source.version>
+        <maven-javadoc.version>3.5.0</maven-javadoc.version>
+        <maven-gpg.version>3.0.1</maven-gpg.version>
+        <sonatype.version>1.6.13</sonatype.version>
     </properties>
 
     <dependencies>
@@ -92,6 +95,96 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc.version}</version>
+                <configuration>
+                    <doclint>none</doclint>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <name>${project.artifactId}</name>
+    <description>A modified version of Aliyun’s ons-client, used to support graalvm.</description>
+    <url>https://github.com/a483210/alimq-ons-client</url>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://github.com/a483210/alimq-ons-client/blob/main/license</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/a483210/alimq-ons-client</url>
+        <connection>scm:git:https://github.com/a483210/alimq-ons-client.git</connection>
+        <developerConnection>scm:git:https://github.com/a483210/alimq-ons-client.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>Github Issue</system>
+        <url>https://github.com/a483210/alimq-ons-client/issues</url>
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <name>a48310</name>
+            <email>a483210@gmail.com</email>
+            <timezone>+8</timezone>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <distributionManagement>
+                <repository>
+                    <id>sonatype-release</id>
+                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg.version}</version>
+                        <executions>
+                            <execution>
+                                <id>ossrh</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>${sonatype.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>sonatype-release</serverId>
+                            <nexusUrl>https://s01.oss.sonatype.org</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
